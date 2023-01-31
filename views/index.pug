@@ -1,0 +1,53 @@
+extends layout
+
+block content
+  h1.text-center オンライン潜水艦ゲーム
+  .container
+    #carouselExampleIndicators.carousel.slide(data-bs-ride="carousel")
+      .carousel-indicators
+        button.active(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide-to="0", aria-current="true", aria-label="Slide 1")
+        button(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide-to="1", aria-label="Slide 2")
+        button(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide-to="2", aria-label="Slide 3")
+      .carousel-inner
+        .carousel-item.active
+          img.d-block.w-100(src="/images/a.jpg", alt="...")
+        .carousel-item
+          img.d-block.w-100(src="/images/a.jpg", alt="...")
+        .carousel-item
+          img.d-block.w-100(src="/images/a.jpg", alt="...")
+      button.carousel-control-prev(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide="prev")
+        span.carousel-control-prev-icon(aria-hidden="true")
+        span.visually-hidden Previous
+      button.carousel-control-next(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide="next")
+        span.carousel-control-next-icon(aria-hidden="true")
+        span.visually-hidden Next
+  if user
+    h4.text-center.my-3 以下の Twitter アカウントでゲームに参加できます。
+    h2.text-center #{user.displayName}
+      img(src=`${user.photos[0].value}`)
+    .d-grid.gap-2.d-md-flex.justify-content-md-center
+      a(href='game').btn.btn-primary #{user.displayName} でゲームに参加
+    .d-grid.gap-2.d-md-flex.justify-content-md-end.mt-4.mt-md-0.mb-2
+      a(href='logout').btn.btn-outline-danger #{user.displayName} をログアウト
+  else if displayName
+    - const encodedPlayerName = encodeURIComponent(displayName);
+    - const encodedThumbUrl = encodeURIComponent(thumbUrl);
+    h4.text-center.my-3 以下のプレイヤーネームでゲームに参加できます。
+      h2.text-center.me-2 #{displayName}
+        img(src=`${thumbUrl}` width="40" height="40").img-fluid.rounded
+    .d-grid.gap-2.d-md-flex.justify-content-md-center.mb-3
+      a(href=`game/?name=${encodedPlayerName}&icon=${encodedThumbUrl}`).btn.btn-primary #{displayName} でゲームに参加
+    .d-grid.gap-2.d-md-flex.justify-content-md-center
+      a(href='name/config').btn.btn-secondary プレイヤーネームを変更
+      h4.text-center.my-2 または
+      a(href="login/twitter").text-light.btn.btn-info Twitter でログイン
+        img(href="login/twitter" src="/images/twitter.png", alt="Twitterアイコン" width="31.5" height="25.925").rounded.float-start
+  else
+    h4.text-center.my-3 Twitter でログインすると
+      br
+      | プレイ中のランキングに名前とアイコンが表示されます
+    .d-flex
+      a(href='login/twitter').text-light.btn.btn-info.flex-grow-1.mx-3 Twitter でログイン
+        img(href="login/twitter" src="/images/twitter.png", alt="Twitterアイコン" width="31.5" height="25.925").rounded.float-start
+      h5.fw-bold.pt-2 または
+      a(href='name/config').text-light.btn.btn-secondary.flex-grow-1.mx-3 プレイヤーネームを設定

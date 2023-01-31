@@ -1,0 +1,146 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous")
+    title 潜水艦ゲーム
+  body
+    .container
+      nav.navbar.navbar-expand-md.navbar-light.bg-light
+        .container-fluid
+          if displayName
+            - const encodedDisplayName = encodeURIComponent(displayName);
+            - const encodedThumbUrl = encodeURIComponent(thumbUrl);
+            a.navbar-brand(href=`/?name=${encodedDisplayName}&icon=${encodedThumbUrl}`)
+              img.d-inline-block.align-text-top(src="images/titleLogo.png", alt="潜水艦ゲーム" width="30" height="30")
+              | 潜水艦ゲーム
+          else
+            a.navbar-brand(href="/")
+              img.d-inline-block.align-text-top(src="/images/titleLogo.png", alt="潜水艦ゲーム" width="30" height="30")
+              | 潜水艦ゲーム
+          button(type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation").navbar-toggler
+            span.navbar-toggler-icon
+          .justify-content-end.collapse.navbar-collapse#navbar
+            ul.navbar-nav
+              li.nav-item
+                .d-lg-inline-flex.d-md-flex
+                  a(role="button" data-bs-toggle="modal" data-bs-target="#howToPlay").text-light.btn.btn-success.nav-link.active.my-3.my-md-0.text-nowrap 遊び方はこちら！
+      #howToPlay.modal.fade(tabindex="-1", aria-labelledby="exampleModalLabel", aria-hidden="true")
+        .modal-dialog.modal-dialog-centered.modal-dialog-scrollable
+          .modal-content
+            .modal-header
+              h5#howToPlay.modal-title 遊び方
+              button.btn-close(type="button", data-bs-dismiss="modal", aria-label="Close")
+            .modal-body.bg-transparent
+              .container-fluid
+                h3.mb-3 操作方法
+                .row.mb-5.text-center
+                  .col
+                    p 矢印キーで移動できます
+                      br
+                      | （長押し不要）
+                      img(src="/images/instructions/howToMove.gif", alt="").img-fluid.rounded
+                  .col
+                    p スペースキーで魚雷を発射します
+                      br
+                      | （長押し不要）
+                      img(src="/images/instructions/emitMissile.gif", alt="").img-fluid.rounded
+                h3.mb-3 アイテムについて
+                .row.mb-3.text-center
+                  .col 
+                    p フィールド上に散らばっている
+                      br
+                      span.text-info 水色
+                      | の丸が空気、
+                      span.text-danger 赤色
+                      | の球が魚雷です
+                      img(src="/images/instructions/items.png", alt="" width="300" height="150").img-fluid.rounded
+                .row.mb-3.text-center
+                  .col 
+                    p 空気を取ると、自機の
+                      br
+                      | 残酸素数が30ほど増えます
+                      br
+                      img(src="/images/instructions/getAir.gif", alt="" width="300" height="290").img-fluid.rounded
+                .row.mb-5.text-center
+                  .col
+                    p また、魚雷を取ると、自機が使える
+                      br
+                      | 魚雷の数が1個増えます（上限6個）
+                      img(src="/images/instructions/getMissile.gif", alt="" width="300" height="290").img-fluid.rounded
+                h3.mb-3 敵プレイヤーについて
+                .row.mb-5.text-center
+                  .col 
+                    p フィールド上の
+                      span.text-primary 青の波紋
+                      | は敵プレイヤー、
+                      br
+                      span.text-danger 赤の波紋
+                      | は敵プレイヤーが放った魚雷を表します
+                      img(src="/images/instructions/enemies.png", alt="" width="300" height="120").img-fluid.rounded.mb-3
+                    p また、「NPC」という名前でロボットのアイコンの
+                      br
+                      | プレイヤーはコンピュータです
+                      img(src="/images/instructions/npc.png", alt="" width="300" height="250").img-fluid.rounded
+                h3.mb-3 ゲームオーバーの条件など
+                .row.mb-3.text-center
+                  .col 
+                    p 魚雷を敵プレイヤーに命中させると、
+                      br
+                      | 敵を倒すことができます！
+                      br
+                      img(src="/images/instructions/killEnemy.gif", alt="" width="200" height="200").img-fluid.rounded
+                .row.mb-3.text-center
+                  .col 
+                    p 反対に、自機も敵が放った魚雷を1回でもくらうと
+                      br
+                      | ゲームオーバーになります
+                      br
+                      img(src="/images/instructions/killedByEnemy.gif", alt="" width="200" height="200").img-fluid.rounded
+                .row.mb-5.text-center
+                  .col 
+                    p また、自機の残酸素数が0になっても
+                      br
+                      | ゲームオーバーになります
+                      br
+                    img(src="/images/instructions/anoxically.gif", alt="" width="250" height="220").img-fluid.rounded
+                h3.mb-3 ゲーム時の画面について
+                .row.mb-5
+                  .col
+                    img(src="/images/instructions/playing.png", alt="").img-fluid.img-thumbnail.mb-3
+                    h4.text-center 説明
+                    - const explanations = ['① ゲーム画面', '② あなたの名前とアイコン', '③ あなたの残酸素量', '④ あなたのミサイル所持数', '⑤ あなたの獲得スコア', '⑥ リアルタイムのランキング', '（ページを離れるかゲームオーバーになると、', 'ランキングから除外されます）'];
+                    - let loopCounter = 0;
+                    each explain in explanations
+                      - loopCounter += 1;
+                      if loopCounter < 6
+                        p #{explain}
+                      else
+                        span #{explain}
+                        br
+                h4 
+                  img(src="/images/instructions/tips.png", alt="" width="20" height="20").img-fluid
+                  |  Tips
+                .row.mb-5.text-center
+                  .col
+                    p 敵が放った魚雷に向かって魚雷を撃つと・・・
+                      br
+                      | どうなるかは試してからのお楽しみ！
+            .modal-footer
+              button.btn.btn-secondary(type="button", data-bs-dismiss="modal") 閉じる
+      
+      block content
+
+      footer.d-flex.flex-wrap.justify-content-between.align-items-center.py-3.mt-5.mb-3.border-top
+        .col-md-4.d-flex.align-items-center
+          a.mb-3.me-2.mb-md-0.text-muted.text-decoration-none.lh-1(href="https://github.com/Udon-japanese")
+            span.mb-3.mb-md-0.text-muted © 2022 Udon-japanese
+        span.nav.col-md-4.justify-content-end.list-unstyled.d-flex
+          a.ms-3.text-muted(href="https://github.com/Udon-japanese/submarine-online")
+            img(src="/images/github.png", alt="" width="35" height="35").img-fluid
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous")

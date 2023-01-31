@@ -1,0 +1,9 @@
+extends layout 
+
+block content
+  h2.text-center.my-3 プレイヤーネーム
+  form(action="/name/config", method="post").input-group
+    input(type="hidden", name="_csrf" value!=csrfToken)
+    input.form-control(name="name" maxlength="40" type="text", aria-describedby="submit-button"
+    placeholder="半角の場合は40字、全角なら20字まで入力できます")
+    button#submit-button.btn.btn-outline-primary(type="submit") 決定
