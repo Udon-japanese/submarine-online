@@ -1,9 +1,29 @@
 extends layout 
 
 block content
+  #captionCarousel.carousel.slide.carousel-fade(data-bs-ride="carousel")
+    .carousel-indicators
+      button.active(type="button", data-bs-target="#captionCarousel", data-bs-slide-to="0", aria-current="true", aria-label="作品サムネイル")
+      button(type="button", data-bs-target="#captionCarousel", data-bs-slide-to="1", aria-label="簡単な遊び方の説明")
+      button(type="button", data-bs-target="#captionCarousel", data-bs-slide-to="2", aria-label="予告")
+    .carousel-inner
+      div(data-bs-interval="5000").carousel-item.active
+        img.d-block.w-100(src="/images/thumbnail.png", alt="...")
+      div(data-bs-interval="10000").carousel-item
+        img.d-block.w-100(src="/images/image.png", alt="...")
+      div(data-bs-interval="8000").carousel-item
+        img.d-block.w-100(src="/images/notice.png", alt="...")
+    button.carousel-control-prev(type="button", data-bs-target="#captionCarousel", data-bs-slide="prev")
+      span.carousel-control-prev-icon(aria-hidden="true")
+      span.visually-hidden Previous
+    button.carousel-control-next(type="button", data-bs-target="#captionCarousel", data-bs-slide="next")
+      span.carousel-control-next-icon(aria-hidden="true")
+      span.visually-hidden Next
+      //- カルーセルの設定
   h2.text-center.my-3 プレイヤーネーム
   form(action="/name/config", method="post").input-group
     input(type="hidden", name="_csrf" value!=csrfToken)
+    //- CSRF脆弱性対策
     input.form-control(name="name" maxlength="40" type="text", aria-describedby="submit-button"
     placeholder="半角の場合は40字、全角なら20字まで入力できます")
     button#submit-button.btn.btn-outline-primary(type="submit") 決定

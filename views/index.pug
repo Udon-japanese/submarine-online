@@ -1,53 +1,55 @@
 extends layout
 
 block content
-  h1.text-center オンライン潜水艦ゲーム
-  .container
-    #carouselExampleIndicators.carousel.slide(data-bs-ride="carousel")
-      .carousel-indicators
-        button.active(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide-to="0", aria-current="true", aria-label="Slide 1")
-        button(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide-to="1", aria-label="Slide 2")
-        button(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide-to="2", aria-label="Slide 3")
-      .carousel-inner
-        .carousel-item.active
-          img.d-block.w-100(src="/images/a.jpg", alt="...")
-        .carousel-item
-          img.d-block.w-100(src="/images/a.jpg", alt="...")
-        .carousel-item
-          img.d-block.w-100(src="/images/a.jpg", alt="...")
-      button.carousel-control-prev(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide="prev")
-        span.carousel-control-prev-icon(aria-hidden="true")
-        span.visually-hidden Previous
-      button.carousel-control-next(type="button", data-bs-target="#carouselExampleIndicators", data-bs-slide="next")
-        span.carousel-control-next-icon(aria-hidden="true")
-        span.visually-hidden Next
+  h1.text-center 潜水艦ゲーム・改
+    //- 全体的にレスポンシブなデザインに
+  #captionCarousel.carousel.slide.carousel-fade(data-bs-ride="carousel")
+    .carousel-indicators
+      button.active(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="0" aria-current="true" aria-label="作品サムネイル")
+      button(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="1" aria-label="簡単な遊び方の説明")
+      button(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="2" aria-label="予告")
+    .carousel-inner
+      div(data-bs-interval="5000").carousel-item.active
+        img.d-block.w-100(src="/images/thumbnail.png" alt="...")
+      div(data-bs-interval="10000").carousel-item
+        img.d-block.w-100(src="/images/image.png" alt="...")
+      div(data-bs-interval="8000").carousel-item
+        img.d-block.w-100(src="/images/notice.png" alt="...")
+    button.carousel-control-prev(type="button" data-bs-target="#captionCarousel" data-bs-slide="prev")
+      span.carousel-control-prev-icon(aria-hidden="true")
+      span.visually-hidden Previous
+    button.carousel-control-next(type="button" data-bs-target="#captionCarousel" data-bs-slide="next")
+      span.carousel-control-next-icon(aria-hidden="true")
+      span.visually-hidden Next
+      //- カルーセルの設定
   if user
     h4.text-center.my-3 以下の Twitter アカウントでゲームに参加できます。
     h2.text-center #{user.displayName}
       img(src=`${user.photos[0].value}`)
     .d-grid.gap-2.d-md-flex.justify-content-md-center
-      a(href='game').btn.btn-primary #{user.displayName} でゲームに参加
-    .d-grid.gap-2.d-md-flex.justify-content-md-end.mt-4.mt-md-0.mb-2
-      a(href='logout').btn.btn-outline-danger #{user.displayName} をログアウト
+      a(href='game' role="button").btn.btn-primary #{user.displayName} でゲームに参加
+    .d-grid.gap-2.d-md-flex.justify-content-md-end.mt-5.mt-md-0.mb-2
+      a(href='logout' role="button").btn.btn-outline-danger #{user.displayName} をログアウト
+      //- Twitter 認証をするのは少し時間がかかるため、誤って押さないよう右下に配置(画面が狭い場合はゲームに参加ボタンから離れた位置に)
   else if displayName
     - const encodedPlayerName = encodeURIComponent(displayName);
     - const encodedThumbUrl = encodeURIComponent(thumbUrl);
     h4.text-center.my-3 以下のプレイヤーネームでゲームに参加できます。
-      h2.text-center.me-2 #{displayName}
-        img(src=`${thumbUrl}` width="40" height="40").img-fluid.rounded
+    h2.text-center.me-2 #{displayName}
+      img(src=`${thumbUrl}` width="40" height="40")
     .d-grid.gap-2.d-md-flex.justify-content-md-center.mb-3
-      a(href=`game/?name=${encodedPlayerName}&icon=${encodedThumbUrl}`).btn.btn-primary #{displayName} でゲームに参加
+      a(href=`game/?name=${encodedPlayerName}&icon=${encodedThumbUrl}` role="button").btn.btn-primary #{displayName} でゲームに参加
     .d-grid.gap-2.d-md-flex.justify-content-md-center
-      a(href='name/config').btn.btn-secondary プレイヤーネームを変更
+      a(href='name/config' role="button").btn.btn-secondary プレイヤーネームを変更
       h4.text-center.my-2 または
-      a(href="login/twitter").text-light.btn.btn-info Twitter でログイン
-        img(href="login/twitter" src="/images/twitter.png", alt="Twitterアイコン" width="31.5" height="25.925").rounded.float-start
+      a(href="login/twitter" role="button").text-light.btn.btn-info Twitter でログイン
+        img(href="login/twitter" src="/images/twitter.png" alt="Twitterアイコン" width="31.5" height="25.925").float-start
   else
     h4.text-center.my-3 Twitter でログインすると
       br
       | プレイ中のランキングに名前とアイコンが表示されます
-    .d-flex
-      a(href='login/twitter').text-light.btn.btn-info.flex-grow-1.mx-3 Twitter でログイン
-        img(href="login/twitter" src="/images/twitter.png", alt="Twitterアイコン" width="31.5" height="25.925").rounded.float-start
-      h5.fw-bold.pt-2 または
-      a(href='name/config').text-light.btn.btn-secondary.flex-grow-1.mx-3 プレイヤーネームを設定
+    .d-grid.gap-2.d-md-flex.justify-content-md-center
+      a(href='login/twitter' role="button").text-nowrap.text-light.btn.btn-info Twitter でログイン
+        img(href="login/twitter" src="/images/twitter.png" alt="Twitterアイコン" width="31.5" height="25.925").float-start
+      h5.text-center.fw-bold.pt-2.text-nowrap または
+      a(href='name/config' role="button").text-nowrap.text-light.btn.btn-secondary プレイヤーネームを設定

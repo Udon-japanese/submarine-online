@@ -134,7 +134,7 @@ function drawSubmarine(ctxRadar, myPlayerObj) {
   ctxRadar.translate(gameObj.radarCanvasWidth / 2, gameObj.radarCanvasHeight / 2);
   ctxRadar.rotate(getRadian(rotationDegree));
   if (myPlayerObj.direction === 'left') {
-    ctxRadar.scale(-1, 1);
+    ctxRadar.scale(-1, 1);// 反転させる
   }
 
   ctxRadar.drawImage(
@@ -189,7 +189,7 @@ function drawRanking(ctxScore, playersMap) {
   ctxScore.fillStyle = "rgb(26, 26, 26)";
   ctxScore.font = '20px Arial';
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 10; i++) {// 1, 2, 3, 4以降で表記を分ける
     if (!playersArray[i]) return;
 
     const rank = i + 1;
@@ -209,12 +209,12 @@ function drawRanking(ctxScore, playersMap) {
         rankString = `${rank}th`;
         break;
     }
-    const x = 10, y = 220 + (rank * 26);
+    const x = 10, y = 220 + (rank * 28);
 
     const { playerId, thumbUrl, displayName, score } = playersArray[i][1];
 
-    if (/twimg\.com/.test(thumbUrl) || /^images\/user-icons\//.test(thumbUrl)) {
-      const thumbWidth = 20, thumbHeight = 20;
+    if (/twimg\.com/.test(thumbUrl) || /^images\/user-icons\//.test(thumbUrl)) {// Twitter の 画像URL と images/user-icons 直下のパスにマッチしないものは除外
+      const thumbWidth = 23, thumbHeight = 23;
       const rankWidth = ctxScore.measureText(rankString).width;
 
       let thumb = null;
@@ -300,13 +300,13 @@ socket.on('map data', (compressed) => {
   gameObj.flyingMissilesMap = new Map();
   for (let compressedFlyingMissileData of flyingMissilesArray) {
       const flyingMissile = {};
-      flyingMissile.missileId = compressedFlyingMissileData[0];
+      flyingMissile.missileId = compressedFlyingMissileData[0];// 一応クライアント側でも、迎撃されたミサイルidと同じかどうか確認したいため、 id も受け取る
       flyingMissile.x = compressedFlyingMissileData[1];
       flyingMissile.y = compressedFlyingMissileData[2];
       flyingMissile.direction = compressedFlyingMissileData[3];
       flyingMissile.emitPlayerId = compressedFlyingMissileData[4];
-      flyingMissile.interceptedMissileId = compressedFlyingMissileData[5];
-      flyingMissile.deadCount = compressedFlyingMissileData[6];
+      flyingMissile.interceptedMissileId = compressedFlyingMissileData[5];// 迎撃されたミサイルのid（中身は flyingMissile.missileId と同じ）
+      flyingMissile.deadCount = compressedFlyingMissileData[6];// ミサイルの爆発を描画するのに必要なカウンター
 
       gameObj.flyingMissilesMap.set(flyingMissile.missileId, flyingMissile);
     }
@@ -398,8 +398,7 @@ function drawMap(gameObj) {
       distanceObj.distanceY <= (gameObj.radarCanvasHeight / 2 + 50)
     ) {
 
-      if (missileId === flyingMissile.interceptedMissileId) {
-        console.log('迎撃ミサイル爆破')
+      if (missileId === flyingMissile.interceptedMissileId) {// 迎撃されたミサイルなら爆発を描画
         drawBom(gameObj.ctxRadar, distanceObj.drawX, distanceObj.drawY, flyingMissile.deadCount);
         continue;
       }
@@ -477,13 +476,13 @@ function drawMap(gameObj) {
         gameObj.ctxRadar.stroke();
 
         gameObj.ctxRadar.font = '11px Arial';
-        gameObj.ctxRadar.fillText('missile', distanceObj.drawX + 30, distanceObj.drawY - 30 - 2);
+        gameObj.ctxRadar.fillText('missile', distanceObj.drawX + 30, distanceObj.drawY - 30 - 2);// ミサイルを放った人の名前は、載せない方が面白そうなので、描画しないようにした
       }
     }
   }
 }
 
-function drawObj(obj, r, g, b) {
+function drawObj(obj, r, g, b) {// マップ上のミサイルと空気の描画を行う
   for (let [key, item] of obj) {
 
     const distanceObj = calculationBetweenTwoPoints(
@@ -595,7 +594,7 @@ $(window).on("keydown", (event) => {
 
   switch (event.key) {
     case 'ArrowLeft':
-      if (gameObj.myPlayerObj.direction === 'left') break;
+      if (gameObj.myPlayerObj.direction === 'left') break; // 変わってない
       gameObj.myPlayerObj.direction = 'left';
       drawSubmarine(gameObj.ctxRadar, gameObj.myPlayerObj); // より瞬時にクライアント側で向きを変化させるため
       sendChangeDirection(socket, 'left');
@@ -630,7 +629,7 @@ $(window).on("keydown", (event) => {
         y: gameObj.myPlayerObj.y,
         direction: gameObj.myPlayerObj.direction,
         id: missileId,
-        interceptedMissileId: null,
+        interceptedMissileId: null,// 最初は空っぽにしておく
         deadCount: 0
       };
       gameObj.flyingMissilesMap.set(missileId, missileObj);
@@ -647,7 +646,7 @@ function sendMissileEmit(socket, direction) {
   socket.emit('missile emit', direction);
 }
 
-function moveInClient(myPlayerObj, flyingMissilesMap) {// サーバからflyingMissilesMap を受け取るまでの移動
+function moveInClient(myPlayerObj, flyingMissilesMap) {// サーバからflyingMissilesMap を受け取るまでの、プレイヤーとミサイルの移動
 
   if (!myPlayerObj.isAlive) {
     if (myPlayerObj.deadCount < 60) {

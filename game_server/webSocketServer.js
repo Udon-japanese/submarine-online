@@ -25,7 +25,7 @@ function createWebSocketServer(io, game) {
   const socketTicker = setInterval(() => {
       rootIo.volatile.emit('map data', game.getMapData()); // 全員に送信
     },
-    66);
+    66);// clearIntervalを使えるように
 }
 
 module.exports = {

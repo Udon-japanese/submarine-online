@@ -43,13 +43,13 @@ const gameTicker = setInterval(() => {
   moveMissile(gameObj.flyingMissilesMap);
   checkGetItem(playersAndNPCMap, gameObj.itemsMap, gameObj.airMap, gameObj.flyingMissilesMap);
   addNPC();
-}, 33);
+}, 33);// だいたい30FPS
 
 function NPCMoveDecision(NPCMap) {
   for (let [NPCId, NPCObj] of NPCMap) {
 
     switch (NPCObj.level) {
-      case 1:
+      case 1: // 標準
         if (Math.floor(Math.random() * 60) === 1) {
           NPCObj.direction = gameObj.directions[Math.floor(Math.random() * gameObj.directions.length)];
         }
@@ -57,7 +57,7 @@ function NPCMoveDecision(NPCMap) {
           missileEmit(NPCObj.playerId, NPCObj.direction);
         }
         break;
-      case 2:
+      case 2: // あまり方向転換をしない代わりに、ミサイルを手に入れたらすぐ放つ
         if (Math.floor(Math.random() * 180) === 1) {
           NPCObj.direction = gameObj.directions[Math.floor(Math.random() * gameObj.directions.length)];
         }
@@ -65,7 +65,7 @@ function NPCMoveDecision(NPCMap) {
           missileEmit(NPCObj.playerId, NPCObj.direction);
         }
         break;
-      case 3:
+      case 3:// 頻繁に方向転換をし、ミサイルもそこそこの頻度で放つ
         if (Math.floor(Math.random() * 5) === 1) {
           NPCObj.direction = gameObj.directions[Math.floor(Math.random() * gameObj.directions.length)];
         }
@@ -117,7 +117,7 @@ function getMapData() {
   for (let [socketId, player] of playersAndNPCMap) {
     const playerDataForSend = [];
 
-    playerDataForSend.push(player.x);// 処理を軽くするため、配列に変換して送る
+    playerDataForSend.push(player.x);
     playerDataForSend.push(player.y);
     playerDataForSend.push(player.playerId);
     playerDataForSend.push(player.displayName);
@@ -164,7 +164,7 @@ function getMapData() {
     flyingMissilesArray.push(flyingMissileDataForSend);
   }
 
-  return [playersArray, itemsArray, airArray, flyingMissilesArray];
+  return [playersArray, itemsArray, airArray, flyingMissilesArray];// 処理を軽くするため、オブジェクトをすべて配列に変換して送る
 }
 
 function updatePlayerDirection(socketId, direction) {
@@ -224,7 +224,7 @@ function addAir() {
   const airKey = `${airX},${airY}`;
 
   if (gameObj.airMap.has(airKey)) { // アイテムの位置が被ってしまった場合は
-    return addAir(); // 場所が重複した場合は作り直し
+    return addAir(); // 別の位置に置くまで作り直し
   }
 
   const airObj = {
@@ -262,7 +262,7 @@ function movePlayers(playersMap) {
         break;
     }
     if (player.x > gameObj.fieldWidth) player.x -= gameObj.fieldWidth;// 右端より右に行ったら、左端に座標を移動する
-    if (player.x < 0) player.x += gameObj.fieldWidth;
+    if (player.x < 0) player.x += gameObj.fieldWidth;// 左端より左に行ったら、右端に座標を移動する。以下同様。
     if (player.y < 0) player.y += gameObj.fieldHeight;
     if (player.y > gameObj.fieldHeight) player.y -= gameObj.fieldHeight;
 
@@ -279,9 +279,9 @@ function movePlayers(playersMap) {
 function moveMissile(flyingMissilesMap) { // ミサイルの移動
   for (let [missileId, flyingMissile] of flyingMissilesMap) {
 
-    if (missileId === flyingMissile.interceptedMissileId) {
+    if (missileId === flyingMissile.interceptedMissileId) {// 迎撃されていたら
       if (flyingMissile.deadCount < 70) {
-        flyingMissile.deadCount += 2;
+        flyingMissile.deadCount += 2;// 爆発の描画に必要なカウンターを更新
       } else {
         flyingMissilesMap.delete(missileId);
       }
@@ -380,7 +380,7 @@ function checkGetItem(playersMap, itemsMap, airMap, flyingMissilesMap) {
         distanceObj.distanceX <= (gameObj.submarineImageWidth / 2 + gameObj.missileWidth / 2) &&
         distanceObj.distanceY <= (gameObj.submarineImageWidth / 2 + gameObj.missileHeight / 2) &&
         playerObj.playerId !== flyingMissile.emitPlayerId &&
-        missileId !== flyingMissile.interceptedMissileId
+        missileId !== flyingMissile.interceptedMissileId// プレイヤーとミサイルが当たっていてかつ自分のミサイルでなく、迎撃されていないミサイルなら
       ) {
         playerObj.isAlive = false;
         // 得点の更新
@@ -401,13 +401,13 @@ function checkGetItem(playersMap, itemsMap, airMap, flyingMissilesMap) {
 
           if (
             distanceObj.distanceX <= gameObj.missileWidth &&
-            distanceObj.distanceY <= gameObj.missileHeight &&
-            flyingMissile.emitPlayerId !== anotherFlyingMissile.emitPlayerId &&
+            distanceObj.distanceY <= gameObj.missileHeight &&// ミサイル同士が当たっていてかつ、
+            flyingMissile.emitPlayerId !== anotherFlyingMissile.emitPlayerId &&// 2つのミサイルが同じ人の放ったミサイルではなく、
             missileId !== flyingMissile.interceptedMissileId &&
-            anotherMissileId !== anotherFlyingMissile.interceptedMissileId
+            anotherMissileId !== anotherFlyingMissile.interceptedMissileId// 両方のミサイルがともに迎撃されていないなら
           ) {
             flyingMissile.interceptedMissileId = missileId;
-            anotherFlyingMissile.interceptedMissileId = anotherMissileId;
+            anotherFlyingMissile.interceptedMissileId = anotherMissileId;// 迎撃されたミサイルにidを代入
           }
         }
         continue;
