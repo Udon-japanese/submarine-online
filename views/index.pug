@@ -40,16 +40,16 @@ block content
     .d-grid.gap-2.d-md-flex.justify-content-md-center.mb-3
       a(href=`game/?name=${encodedPlayerName}&icon=${encodedThumbUrl}` role="button").btn.btn-primary #{displayName} でゲームに参加
     .d-grid.gap-2.d-md-flex.justify-content-md-center
-      a(href='name/config' role="button").btn.btn-secondary プレイヤーネームを変更
+      a(href='name/config' role="button").btn.btn-secondary.py-2 プレイヤーネームを変更
       h4.text-center.my-2 または
-      a(href="login/twitter" role="button").text-light.btn.btn-info Twitter でログイン
-        img(href="login/twitter" src="/images/twitter.png" alt="Twitterアイコン" width="31.5" height="25.925").float-start
+      a(href="login/twitter" role="button").text-light.btn.btn-info.py-2 Twitter でログイン
+        img(href="login/twitter" src="/images/twitter.png" alt="Twitterアイコン" width="25" height="20.575").float-start.me-2
   else
     h4.text-center.my-3 Twitter でログインすると
       br
       | プレイ中のランキングに名前とアイコンが表示されます
     .d-grid.gap-2.d-md-flex.justify-content-md-center
-      a(href='login/twitter' role="button").text-nowrap.text-light.btn.btn-info Twitter でログイン
-        img(href="login/twitter" src="/images/twitter.png" alt="Twitterアイコン" width="31.5" height="25.925").float-start
+      a(href='login/twitter' role="button").text-nowrap.text-light.btn.btn-info.py-2 Twitter でログイン
+        img(href="login/twitter" src="/images/twitter.png" alt="Twitterアイコン" width="25" height="20.575").float-start.me-2
       h5.text-center.fw-bold.pt-2.text-nowrap または
-      a(href='name/config' role="button").text-nowrap.text-light.btn.btn-secondary プレイヤーネームを設定
+      a(href='name/config' role="button").text-nowrap.text-light.btn.btn-secondary.py-2 プレイヤーネームを設定
