@@ -2,7 +2,7 @@
 (製作途中です。もうしばらくお待ちください。)  
 
 [![Module install and build with webpack](https://github.com/Udon-japanese/submarine-online/actions/workflows/main.yml/badge.svg)](https://github.com/Udon-japanese/submarine-online/actions/workflows/main.yml)
-## 遊び方(ゲームのルールや操作方法等、詳しい遊び方は、[ゲームの Web ページ](https://udon-japanese-submarine-online.onrender.com/)内に記載しております)
+## 遊び方(ゲームのルールや操作方法等、詳しい遊び方は、[ページ内の「遊び方はこちら」](https://udon-japanese-submarine-online.onrender.com/)に記載しております)
 1. Twitter でログインまたは名前を設定します
 2. 「(プレイヤーネーム)でゲームに参加」ボタンを押します
 3. ゲームが開始されます
