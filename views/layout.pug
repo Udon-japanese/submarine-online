@@ -25,13 +25,13 @@ html(lang="ja")
           a.navbar-brand(href="/")
             img.d-inline-block.align-text-top(src="/images/titleLogo.png" alt="潜水艦ゲーム" width="30" height="30")
             | 潜水艦ゲーム・改
-          button(type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation").navbar-toggler
-            span.navbar-toggler-icon
-          .justify-content-end.collapse.navbar-collapse#navbar
-            ul.navbar-nav
-              li.nav-item
-                .d-lg-inline-flex.d-md-flex
-                  a(role="button" data-bs-toggle="modal" data-bs-target="#howToPlay").text-light.btn.btn-success.nav-link.active.my-3.my-md-0.text-nowrap 遊び方はこちら
+        button(type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation").navbar-toggler
+          span.navbar-toggler-icon
+        .justify-content-end.collapse.navbar-collapse#navbar
+          ul.navbar-nav
+            li.nav-item
+              .d-lg-inline-flex.d-md-flex
+                a(role="button" data-bs-toggle="modal" data-bs-target="#howToPlay").text-light.btn.btn-success.nav-link.active.my-3.my-md-0.text-nowrap 遊び方はこちら
       #howToPlay.modal.fade(tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true")
         .modal-dialog.modal-dialog-centered.modal-dialog-scrollable.modal-lg
           .modal-content
@@ -138,7 +138,7 @@ html(lang="ja")
                 h4
                   img(src="/images/instructions/tips.png" alt="" width="20" height="20").img-fluid
                   |  Tips
-                  //- ゲームの遊び方説明と少しそれるので一回り小さく
+                  //- ゲームの遊び方説明と少しそれるので h4 にして一回り小さく
                 .row.mb-5.text-center
                   .col
                     p スコアを一番稼げるのは・・・

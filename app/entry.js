@@ -299,6 +299,7 @@ socket.on('map data', (compressed) => {
 
   gameObj.flyingMissilesMap = new Map();
   for (let compressedFlyingMissileData of flyingMissilesArray) {
+    
       const flyingMissile = {};
       flyingMissile.missileId = compressedFlyingMissileData[0];// 一応クライアント側でも、迎撃されたミサイルidと同じかどうか確認したいため、 id も受け取る
       flyingMissile.x = compressedFlyingMissileData[1];
@@ -621,7 +622,7 @@ $(window).on("keydown", (event) => {
       if (gameObj.myPlayerObj.missilesMany <= 0) break;
 
       gameObj.myPlayerObj.missilesMany -= 1;
-      const missileId = `${crypto.randomBytes(8).toString('hex')},${gameObj.myPlayerObj.socketId},${gameObj.myPlayerObj.x},${gameObj.myPlayerObj.y}`;
+      const missileId = `${crypto.randomBytes(8).toString('hex')},${gameObj.myPlayerObj.socketId},${gameObj.myPlayerObj.x},${gameObj.myPlayerObj.y}`;// より id が被らないよう、16進数の文字列で設定
 
       const missileObj = {
         emitPlayerId: gameObj.myPlayerObj.playerId,

@@ -8,8 +8,10 @@ block content
       button(type="button", data-bs-target="#captionCarousel", data-bs-slide-to="2", aria-label="予告")
     .carousel-inner
       div(data-bs-interval="5000").carousel-item.active
+        //- サムネイルは短め
         img.d-block.w-100(src="/images/thumbnail.png", alt="...")
       div(data-bs-interval="10000").carousel-item
+        //- ゲームの説明は少し長めに表示
         img.d-block.w-100(src="/images/image.png", alt="...")
       div(data-bs-interval="8000").carousel-item
         img.d-block.w-100(src="/images/notice.png", alt="...")
@@ -25,5 +27,5 @@ block content
     input(type="hidden", name="_csrf" value!=csrfToken)
     //- CSRF脆弱性対策
     input.form-control(name="name" maxlength="40" type="text", aria-describedby="submit-button"
-    placeholder="半角の場合は40字、全角なら20字まで入力できます")
+    placeholder="20文字まで入力できます")
     button#submit-button.btn.btn-outline-primary(type="submit") 決定

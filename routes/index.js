@@ -9,9 +9,14 @@ const playerIcons = [
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  if (req.query.name && req.query.icon && !req.user) {// もう一度名前を入力する必要がないように
-    const displayName = decodeURIComponent(req.query.name);
-    const thumbUrl = decodeURIComponent(req.query.icon);
+  if (req.query.name && req.query.icon && !req.user) {// トップページに戻った際に、もう一度名前を入力する必要がないように
+    let displayName = decodeURIComponent(req.query.name);
+    let thumbUrl = decodeURIComponent(req.query.icon);
+
+    if (thumbUrl.match(/twimg\.com/)) {// Twitter 認証を完了していない人が Twitter ログイン後の URL でアクセスしてきた際の対策
+      displayName = null;
+      thumbUrl = null;
+    }
 
     res.render('index', { displayName, thumbUrl });
 
@@ -21,7 +26,7 @@ router.get('/', (req, res, next) => {
     
     res.render('index', { displayName, thumbUrl });
 
-  } else {// Twitter ログインしている場合
+  } else {// Twitter 認証をしている場合と、Twitter 認証をしておらず、プレイヤーネームも設定していない場合
     res.render('index', { user: req.user })
   }
 });
