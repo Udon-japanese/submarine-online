@@ -5,16 +5,19 @@ block content
     //- 全体的にレスポンシブなデザインに
   #captionCarousel.carousel.slide.carousel-fade(data-bs-ride="carousel")
     .carousel-indicators
-      button.active(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="0" aria-current="true" aria-label="作品サムネイル")
+      button.active(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="0"
+      aria-current="true" aria-label="作品サムネイル")
       button(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="1" aria-label="簡単な遊び方の説明")
       button(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="2" aria-label="予告")
     .carousel-inner
-      div(data-bs-interval="5000").carousel-item.active
-        img.d-block.w-100(src="/images/thumbnail.png" alt="...")
-      div(data-bs-interval="10000").carousel-item
-        img.d-block.w-100(src="/images/image.png" alt="...")
-      div(data-bs-interval="8000").carousel-item
-        img.d-block.w-100(src="/images/notice.png" alt="...")
+      div.carousel-item.active(data-bs-interval="5000")
+        //- サムネイルは短めに表示
+        img.d-block.w-100(src="/images/thumbnail.png" alt="作品サムネイル")
+      div.carousel-item(data-bs-interval="10000")
+        //- ゲームの説明は少し長めに表示
+        img.d-block.w-100(src="/images/image.png" alt="簡単な遊び方の説明")
+      div.carousel-item(data-bs-interval="8000")
+        img.d-block.w-100(src="/images/notice.png" alt="予告")
     button.carousel-control-prev(type="button" data-bs-target="#captionCarousel" data-bs-slide="prev")
       span.carousel-control-prev-icon(aria-hidden="true")
       span.visually-hidden Previous
@@ -25,31 +28,31 @@ block content
   if user
     h4.text-center.my-3 以下の Twitter アカウントでゲームに参加できます。
     h2.text-center #{user.displayName}
-      img(src=`${user.photos[0].value}`)
+      img(src=`${user.photos[0].value}` alt=`${user.displayName} のアイコン`)
     .d-grid.gap-2.d-md-flex.justify-content-md-center
-      a(href='game' role="button").btn.btn-primary #{user.displayName} でゲームに参加
+      a.btn.btn-primary(href='game' role="button") #{user.displayName} でゲームに参加
     .d-grid.gap-2.d-md-flex.justify-content-md-end.mt-5.mt-md-0.mb-2
-      a(href='logout' role="button").btn.btn-outline-danger #{user.displayName} をログアウト
+      a.btn.btn-outline-danger(href='logout' role="button") #{user.displayName} をログアウト
       //- Twitter 認証をするのは少し時間がかかるため、誤って押さないよう右下に配置(画面が狭い場合はゲームに参加ボタンから離れた位置に)
   else if displayName
     - const encodedPlayerName = encodeURIComponent(displayName);
     - const encodedThumbUrl = encodeURIComponent(thumbUrl);
     h4.text-center.my-3 以下のプレイヤーネームでゲームに参加できます。
     h2.text-center.me-2 #{displayName}
-      img(src=`${thumbUrl}` width="40" height="40")
+      img(src=`${thumbUrl}` alt=`${displayName} のアイコン` width="40" height="40")
     .d-grid.gap-2.d-md-flex.justify-content-md-center.mb-3
-      a(href=`game/?name=${encodedPlayerName}&icon=${encodedThumbUrl}` role="button").btn.btn-primary #{displayName} でゲームに参加
+      a.btn.btn-primary(href=`game/?name=${encodedPlayerName}&icon=${encodedThumbUrl}` role="button") #{displayName} でゲームに参加
     .d-grid.gap-2.d-md-flex.justify-content-md-center
-      a(href='name/config' role="button").btn.btn-secondary.py-2 プレイヤーネームを変更
+      a.btn.btn-secondary.py-2(href='name/config' role="button") プレイヤーネームを変更
       h4.text-center.my-2 または
-      a(href="login/twitter" role="button").text-light.btn.btn-info.py-2 Twitter でログイン
-        img(href="login/twitter" src="/images/twitter.png" alt="Twitterアイコン" width="25" height="20.575").float-start.me-2
+      a.text-light.btn.btn-info.py-2(href="login/twitter" role="button") Twitter でログイン
+        img.float-start.me-2(href="login/twitter" src="/images/twitter.png" alt="Twitterロゴ" width="25" height="20.575")
   else
     h4.text-center.my-3 Twitter でログインすると
       br
       | プレイ中のランキングに名前とアイコンが表示されます
     .d-grid.gap-2.d-md-flex.justify-content-md-center
-      a(href='login/twitter' role="button").text-nowrap.text-light.btn.btn-info.py-2 Twitter でログイン
-        img(href="login/twitter" src="/images/twitter.png" alt="Twitterアイコン" width="25" height="20.575").float-start.me-2
+      a.text-nowrap.text-light.btn.btn-info.py-2(href='login/twitter' role="button") Twitter でログイン
+        img.float-start.me-2(href="login/twitter" src="/images/twitter.png" alt="Twitterロゴ" width="25" height="20.575")
       h5.text-center.fw-bold.pt-2.text-nowrap または
-      a(href='name/config' role="button").text-nowrap.text-light.btn.btn-secondary.py-2 プレイヤーネームを設定
+      a.text-nowrap.text-light.btn.btn-secondary.py-2(href='name/config' role="button") プレイヤーネームを設定

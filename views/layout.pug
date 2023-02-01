@@ -18,20 +18,23 @@ html(lang="ja")
         if displayName
           - const encodedDisplayName = encodeURIComponent(displayName);
           - const encodedThumbUrl = encodeURIComponent(thumbUrl);
+          //- 表示名がある場合、再ログインや名前再設定が必要ないようにした
           a.navbar-brand(href=`/?name=${encodedDisplayName}&icon=${encodedThumbUrl}`)
-            img.d-inline-block.align-text-top(src="images/titleLogo.png" alt="潜水艦ゲーム" width="30" height="30")
+            img.d-inline-block.align-text-top(src="images/titleLogo.png" alt="潜水艦ゲーム・改" width="30" height="30")
             | 潜水艦ゲーム・改
         else
           a.navbar-brand(href="/")
-            img.d-inline-block.align-text-top(src="/images/titleLogo.png" alt="潜水艦ゲーム" width="30" height="30")
+            img.d-inline-block.align-text-top(src="/images/titleLogo.png" alt="潜水艦ゲーム・改" width="30" height="30")
             | 潜水艦ゲーム・改
-        button(type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation").navbar-toggler
+        button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
+        aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation")
           span.navbar-toggler-icon
         .justify-content-end.collapse.navbar-collapse#navbar
           ul.navbar-nav
             li.nav-item
               .d-lg-inline-flex.d-md-flex
-                a(role="button" data-bs-toggle="modal" data-bs-target="#howToPlay").text-light.btn.btn-success.nav-link.active.my-3.my-md-0.text-nowrap 遊び方はこちら
+                a.text-light.btn.btn-success.nav-link.active.my-3.my-md-0.text-nowrap(role="button"
+                data-bs-toggle="modal" data-bs-target="#howToPlay") 遊び方はこちら
       #howToPlay.modal.fade(tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true")
         .modal-dialog.modal-dialog-centered.modal-dialog-scrollable.modal-lg
           .modal-content
@@ -41,18 +44,19 @@ html(lang="ja")
             .modal-body.bg-transparent
               .container-fluid
                 h3.mb-3 操作方法
+                //- 項目の見出しは左揃えの方が見やすいと感じたため
                 .row.mb-5.text-center
                   .col
                     p 矢印キーで移動できます
                       br
                       | （長押し不要）
-                      img(src="/images/instructions/howToMove.gif" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/howToMove.gif" alt="押した矢印キーの方向に動く")
                   .col
                     p.text-nowrap スペースキーで魚雷を発射します
                       br
                       | （長押し不要）
                       br
-                      img(src="/images/instructions/emitMissile.gif" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/emitMissile.gif" alt="自機が向いている方向に向かって発射")
                 h3.mb-3 アイテムについて
                 .row.mb-5.text-center
                   .col 
@@ -63,18 +67,18 @@ html(lang="ja")
                       span.text-danger 赤色
                       | の球が魚雷です
                       br
-                      img(src="/images/instructions/items.png" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/items.png" alt="")
                 .row.mb-5.text-center
                   .col 
                     p.text-wrap 空気を取ると、自機の残酸素数が30ほど増えます
                       br
-                      img(src="/images/instructions/getAir.gif" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/getAir.gif" alt="残酸素数が50から80というように増える")
                   .col
                     p.text-wrap また、魚雷を取ると、
                       br
                       | 自機が使える魚雷の数が1個増えます（上限6個）
                       br
-                      img(src="/images/instructions/getMissile.gif" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/getMissile.gif" alt="")
                 h3.mb-3 敵プレイヤーについて
                 .row.mb-5.text-center
                   .col 
@@ -88,37 +92,37 @@ html(lang="ja")
                       br
                       | が放った魚雷を表します
                       br
-                      img(src="/images/instructions/enemies.png" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/enemies.png" alt="")
                   .col
                     p.text-wrap また、「NPC」という名前でロボットのアイコンの
                       br
                       //- いろいろ試して、最も適切そうな場所で改行を入れた
                       | プレイヤーはコンピュータです
                       br
-                      img(src="/images/instructions/npc.png" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/npc.png" alt="")
                 h3.mb-3 ゲームオーバーの条件など
                 .row.mb-3.text-center
                   .col 
                     p.text-wrap 魚雷を敵プレイヤーに命中させると、敵を倒すことができます！
                       br
-                      img(src="/images/instructions/killEnemy.gif" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/killEnemy.gif" alt="一発命中させると、倒すことができる")
                   .col.text-wrap
                     p 反対に、自機も敵が放った魚雷を1回でもくらうと
                       br
                       //- いろいろ試して、最も適切そうな場所で改行を入れた
                       | ゲームオーバーになります
                       br
-                      img(src="/images/instructions/killedByEnemy.gif" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/killedByEnemy.gif" alt="")
                 .row.mb-5.text-center
                   .col 
-                    p.text-wrap また、自機の残酸素数が0になってもゲームオーバーになります
+                    p.text-wrap また、自機の残酸素数が尽きてもゲームオーバーになります
                       br
-                      img(src="/images/instructions/anoxically.gif" alt="").img-fluid.rounded.w-auto
+                      img.img-fluid.rounded(src="/images/instructions/anoxically.gif" alt="残酸素数が0になるとゲームオーバー")
                 h3.mb-3 ゲーム時の画面について
                 .row.mb-5
                   .col
-                    img(src="/images/instructions/playing.png" alt="").img-fluid.img-thumbnail.mb-3
-                    h4.text-center 説明
+                    img.img-fluid.img-thumbnail.mb-3(src="/images/instructions/playing.png" alt="ゲーム画面")
+                    h5.text-center 説明
                     p.text-center （ウインドウの大きさにより、配置が異なる場合があります）
                     - 
                       const explanations = [
@@ -134,9 +138,9 @@ html(lang="ja")
                       else
                         span #{explain}
                         br
-                        //- 説明の項目は、中央揃えにすると見づらいためあえて左揃えに
+                        //- 説明の文章は、中央揃えにすると見づらいためあえて左揃えに
                 h4
-                  img(src="/images/instructions/tips.png" alt="" width="20" height="20").img-fluid
+                  img.img-fluid(src="/images/instructions/tips.png" alt="" width="20" height="20")
                   |  Tips
                   //- ゲームの遊び方説明と少しそれるので h4 にして一回り小さく
                 .row.mb-5.text-center
@@ -158,6 +162,6 @@ html(lang="ja")
             span.mb-3.mb-md-0.text-muted © 2023 Udon-japanese
         span.nav.col-md-4.justify-content-end.list-unstyled.d-flex
           a.ms-3.text-muted(href="https://github.com/Udon-japanese/submarine-online")
-            img(src="/images/github.png" alt="" width="35" height="35").img-fluid
+            img.img-fluid(src="/images/github.png" alt="GitHub ロゴ" width="35" height="35")
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous")
