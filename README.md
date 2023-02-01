@@ -8,7 +8,7 @@
 3. ゲームが開始されます
 
 ## 作品中で使用している画像について
-- 潜水艦の画像、ミサイルの画像、爆発の画像については、[折原ダビデ竜先生](https://github.com/DDRAGON)が製作された物を使わせていただいております。
+- 潜水艦の画像、ミサイルの画像、爆発の画像については、[折原ダビデ竜](https://github.com/DDRAGON)先生が製作された物を使わせていただいております。
 - [Twitter](https://about.twitter.com/ja/who-we-are/brand-toolkit)と
 [GitHub](https://github.com/logos)
 のロゴは、公式サイトが配布している物を使わせていただいております。
