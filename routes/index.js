@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const iconsPath = 'images/user-icons';
-const playerIcons = [
+const playerIcons = [// ファイル名・・・ 四角か丸の頭文字(英語)　＋　色の先頭(一部例外あり)2〜4文字
   '/cbl.PNG', '/cda.PNG', '/cgr.PNG', '/cor.PNG', '/cpi.PNG', '/cpu.PNG', '/cre.PNG', '/csk.PNG', '/cye.PNG', '/cygre.PNG',
   '/sbl.PNG', '/sda.PNG', '/sgr.PNG', '/sor.PNG', '/spi.PNG', '/spu.PNG', '/sre.PNG', '/ssk.PNG', '/sye.PNG', '/sygre.PNG'
 ];// プレイヤーネームを設定する人用のアイコンパス

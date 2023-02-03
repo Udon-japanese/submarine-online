@@ -20,21 +20,86 @@ html(lang="ja")
           - const encodedThumbUrl = encodeURIComponent(thumbUrl);
           //- 表示名がある場合、再ログインや名前再設定が必要ないようにした
           a.navbar-brand(href=`/?name=${encodedDisplayName}&icon=${encodedThumbUrl}`)
-            img.d-inline-block.align-text-top(src="images/titleLogo.png" alt="潜水艦ゲーム・改" width="30" height="30")
+            img.d-inline-block.align-text-top(src="images/title-logo.png" alt="潜水艦ゲーム・改" width="30" height="30")
             | 潜水艦ゲーム・改
         else
           a.navbar-brand(href="/")
-            img.d-inline-block.align-text-top(src="/images/titleLogo.png" alt="潜水艦ゲーム・改" width="30" height="30")
+            img.d-inline-block.align-text-top(src="/images/title-logo.png" alt="潜水艦ゲーム・改" width="30" height="30")
             | 潜水艦ゲーム・改
         button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
         aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation")
           span.navbar-toggler-icon
         .justify-content-end.collapse.navbar-collapse#navbar
           ul.navbar-nav
+            li.nav-item 
+              .d-grid.gap-2.d-md-flex
+                a.btn.btn-outline-success.nav-link.me-md-4.mt-3.me-0.my-md-0.text-nowrap(role="button"
+                data-bs-toggle="modal" data-bs-target="#howToPlayLatest") Ver. 1.1以降の機能
             li.nav-item
-              .d-lg-inline-flex.d-md-flex
-                a.text-light.btn.btn-success.nav-link.active.my-3.my-md-0.text-nowrap(role="button"
+              .d-grid.gap-2.d-md-flex
+                a.text-light.btn.btn-success.nav-link.my-3.my-md-0.text-nowrap(role="button"
                 data-bs-toggle="modal" data-bs-target="#howToPlay") 遊び方はこちら
+      #howToPlayLatest.modal.fade(tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true")
+        .modal-dialog.modal-dialog-centered.modal-dialog-scrollable.modal-lg
+          .modal-content
+            .modal-header
+              h5#howToPlayLatest.modal-title Ver. 1.1 以降の新機能
+              button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+            .modal-body.bg-transparent
+              .container-fluid
+                h3.mb-3 Ver. 1.1(最新): 
+                  br.d-lg-none
+                  | 新アイテム「スクリュー」
+                //- 項目の見出しは左揃えの方が見やすいと感じたため
+                .row.mb-5.text-center
+                  .col-6
+                    p フィールド上に
+                      br.d-lg-none
+                      | 散らばっている
+                      span.text-warning 金色
+                      | の
+                      br.d-lg-none
+                      | アイテムが
+                      br.d-sm-none
+                      | スクリューです。
+                      img.img-fluid.rounded(src="/images/instructions/screw.png" alt="")
+                  .col-6
+                    p スクリューを取ると、
+                      br.d-lg-none
+                      | 自機が使える
+                      br
+                      | スクリューの数が
+                      br.d-lg-none
+                      | 1個増えます（上限1個）
+                      br
+                      img.img-fluid.rounded(src="/images/instructions/get-screw.gif" alt="")
+                h4.mb-3 スクリューの使い方や仕様等
+                .row.mb-5.text-center 
+                  .col 
+                    p Sキー（大文字小文字どちらでも可）
+                      br.d-sm-none
+                      | を押すと使用できます。
+                    img.img-fluid.rounded(src="/images/instructions/how-to-use-screw.gif", alt="")
+                .row.text-center
+                  .col 
+                    p スクリューを使うことで、5秒間ほど高速移動ができます
+                      br
+                      | （ミサイルの動きは速くなりません）
+                      br
+                      img.img-fluid.rounded(src="/images/instructions/use-screw.gif", alt="")
+                      br
+                      | しかし、スクリューは非常に強大な
+                      br.d-lg-none
+                      | パワーを持っているため、
+                      br
+                      | 使った瞬間に使用者のスコアは
+                      span.text-danger マイナス100され
+                      | 、
+                      br
+                      | 使用中は
+                      span.text-danger 猛スピードで残酸素数が減っていきます
+            .modal-footer
+              button.btn.btn-secondary(type="button" data-bs-dismiss="modal") 閉じる
       #howToPlay.modal.fade(tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true")
         .modal-dialog.modal-dialog-centered.modal-dialog-scrollable.modal-lg
           .modal-content
@@ -46,17 +111,18 @@ html(lang="ja")
                 h3.mb-3 操作方法
                 //- 項目の見出しは左揃えの方が見やすいと感じたため
                 .row.mb-5.text-center
-                  .col
+                  .col-6
                     p 矢印キーで移動できます
                       br
                       | （長押し不要）
-                      img.img-fluid.rounded(src="/images/instructions/howToMove.gif" alt="押した矢印キーの方向に動く")
-                  .col
-                    p.text-nowrap スペースキーで魚雷を発射します
+                      img.img-fluid.rounded(src="/images/instructions/how-to-move.gif" alt="押した矢印キーの方向に動く")
+                  .col-6
+                    p スペースキーで魚雷を
+                      br.d-lg-none
+                      | 発射します
                       br
                       | （長押し不要）
-                      br
-                      img.img-fluid.rounded(src="/images/instructions/emitMissile.gif" alt="自機が向いている方向に向かって発射")
+                      img.img-fluid.rounded(src="/images/instructions/emit-missile.gif" alt="自機が向いている方向に向かって発射")
                 h3.mb-3 アイテムについて
                 .row.mb-5.text-center
                   .col 
@@ -71,56 +137,70 @@ html(lang="ja")
                       //- 文字の説明のみで十分であり、あまり重要でないと判断したため、 alt 属性は空文字列にした。
                 .row.mb-5.text-center
                   .col 
-                    p.text-wrap 空気を取ると、自機の残酸素数が30ほど増えます
+                    p 空気を取ると、自機の残酸素数が30ほど増えます
                       br
-                      img.img-fluid.rounded(src="/images/instructions/getAir.gif" alt="残酸素数が50から80というように増える")
+                      img.img-fluid.rounded(src="/images/instructions/get-air.gif" alt="残酸素数が50から80というように増える")
                   .col
-                    p.text-wrap また、魚雷を取ると、
+                    p また、魚雷を取ると、
                       br
                       | 自機が使える魚雷の数が1個増えます（上限6個）
                       br
-                      img.img-fluid.rounded(src="/images/instructions/getMissile.gif" alt="")
+                      img.img-fluid.rounded(src="/images/instructions/get-missile.gif" alt="")
                       //- 文字の説明のみで十分であり、あまり重要でないと判断したため、 alt 属性は空文字列にした。
                 h3.mb-3 敵プレイヤーについて
                 .row.mb-5.text-center
                   .col-6
-                    p.text-wrap フィールド上の
+                    p フィールド上の
                       span.text-primary 青の波紋
                       | は
-                      br
+                      br.d-lg-none
                       | 敵プレイヤー、
+                      br.d-none.d-lg-inline.flex
                       span.text-danger 赤の波紋
-                      | は敵プレイヤー
-                      br
-                      | が放った魚雷を表します
+                      | は
+                      br.d-lg-none
+                      | 敵プレイヤーが放った魚雷を表します
                       br
                       img.img-fluid.rounded(src="/images/instructions/enemies.png" alt="")
                       //- 文字の説明のみで十分であり、あまり重要でないと判断したため、 alt 属性は空文字列にした。
                   .col-6
-                    p.text-wrap また、「NPC」という名前でロボットのアイコンの
-                      br
-                      //- いろいろ試して、最も適切そうな場所で改行を入れた
-                      | プレイヤーはコンピュータです
-                      br
+                    p また、「NPC」という名前
+                      br.d-md-none
+                      | でロボットの
+                      br.d-none.d-lg-inline-flex
+                      | アイコンの
+                      br.d-lg-none
+                      | プレイヤーは
+                      br.d-lg-none
+                      | コンピュータです
                       img.img-fluid.rounded(src="/images/instructions/npc.png" alt="")
                       //- 文字の説明のみで十分であり、あまり重要でないと判断したため、 alt 属性は空文字列にした。
                 h3.mb-3 ゲームオーバーの条件など
                 .row.mb-3.text-center
-                  .col 
-                    p.text-wrap 魚雷を敵プレイヤーに命中させると、敵を倒すことができます！
+                  .col-6
+                    p 魚雷を敵プレイヤーに命中
                       br
-                      img.img-fluid.rounded(src="/images/instructions/killEnemy.gif" alt="一発命中させると、倒すことができる")
-                  .col.text-wrap
-                    p 反対に、自機も敵が放った魚雷を1回でもくらうと
+                      | させると、敵を倒すことが
+                      br.d-lg-none
+                      | できます！
                       br
-                      //- いろいろ試して、最も適切そうな場所で改行を入れた
+                      img.img-fluid.rounded(src="/images/instructions/kill-enemy.gif" alt="一発命中させると、倒すことができる")
+                  .col
+                    p 反対に、自機も敵が放った
+                      br.d-lg-none
+                      | 魚雷を1回でもくらうと
+                      br.d-lg-none
                       | ゲームオーバーになります
                       br
-                      img.img-fluid.rounded(src="/images/instructions/killedByEnemy.gif" alt="")
+                      img.img-fluid.rounded(src="/images/instructions/killed-by-enemy.gif" alt="")
                       //- 文字の説明のみで十分であり、あまり重要でないと判断したため、 alt 属性は空文字列にした。
                 .row.mb-5.text-center
-                  .col 
-                    p.text-wrap また、自機の残酸素数が尽きてもゲームオーバーになります
+                  .col-6
+                    p また、自機の残酸素数
+                      br
+                      | が尽きてもゲームオーバー
+                      br.d-lg-none
+                      | になります
                       br
                       img.img-fluid.rounded(src="/images/instructions/anoxically.gif" alt="残酸素数が0になるとゲームオーバー")
                 h3.mb-3 ゲーム時の画面について
@@ -128,7 +208,9 @@ html(lang="ja")
                   .col
                     img.img-fluid.img-thumbnail.mb-3(src="/images/instructions/playing.png" alt="ゲーム画面")
                     h5.text-center 説明
-                    p.text-center （ウインドウの大きさにより、配置が異なる場合があります）
+                    p.text-center （ウインドウの大きさにより、
+                      br.d-lg-none
+                      | 配置が異なる場合があります）
                     - 
                       const explanations = [
                         '① ゲーム画面', '② あなたの名前とアイコン', '③ あなたの残酸素量',
@@ -149,7 +231,7 @@ html(lang="ja")
                   //- 装飾として使用しているため、不必要だと判断したため、alt 属性は空文字列にした。
                   |  Tips
                   //- ゲームの遊び方説明と少しそれるので h4 にして一回り小さく
-                .row.mb-5.text-center
+                .row.text-center
                   .col
                     p スコアを一番稼げるのは・・・
                       br

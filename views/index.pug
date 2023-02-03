@@ -8,16 +8,19 @@ block content
       button.active(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="0"
       aria-current="true" aria-label="作品サムネイル")
       button(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="1" aria-label="簡単な遊び方の説明")
-      button(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="2" aria-label="予告")
+      button(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="2" aria-label="新機能")
+      button(type="button" data-bs-target="#captionCarousel" data-bs-slide-to="3" aria-label="予告")
     .carousel-inner
       div.carousel-item.active(data-bs-interval="5000")
         //- サムネイルは短めに表示
-        img.d-block.w-100(src="/images/thumbnail.png" alt="作品サムネイル")
+        img.d-block.w-100(src="/images/carousel-images/thumbnail.png" alt="作品サムネイル")
       div.carousel-item(data-bs-interval="10000")
         //- ゲームの説明は少し長めに表示
-        img.d-block.w-100(src="/images/image.png" alt="簡単な遊び方の説明")
+        img.d-block.w-100(src="/images/carousel-images/image.png" alt="簡単な遊び方の説明")
       div.carousel-item(data-bs-interval="8000")
-        img.d-block.w-100(src="/images/notice.png" alt="予告")
+        img.d-block.w-100(src="/images/carousel-images/ver.1.1-new-item.png" alt="新アイテム「スクリュー」追加")
+      div.carousel-item(data-bs-interval="8000")
+        img.d-block.w-100(src="/images/carousel-images/notice.png" alt="予告")
     button.carousel-control-prev(type="button" data-bs-target="#captionCarousel" data-bs-slide="prev")
       span.carousel-control-prev-icon(aria-hidden="true")
       span.visually-hidden Previous
@@ -54,5 +57,5 @@ block content
     .d-grid.gap-2.d-md-flex.justify-content-md-center
       a.text-nowrap.text-light.btn.btn-info.py-2(href='login/twitter' role="button") Twitter でログイン
         img.float-start.me-2(href="login/twitter" src="/images/twitter.png" alt="Twitterロゴ" width="25" height="20.575")
-      h5.text-center.fw-bold.pt-2.text-nowrap または
+      h4.text-center.pt-2.text-nowrap または
       a.text-nowrap.text-light.btn.btn-secondary.py-2(href='name/config' role="button") プレイヤーネームを設定

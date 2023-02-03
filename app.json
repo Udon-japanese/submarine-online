@@ -1,7 +1,7 @@
 {
   "name": "submarine-online",
   "description": "潜水艦ゲーム",
-  "logo": "/public/images/titleLogo.png",
+  "logo": "/public/images/title-logo.png",
   "keywords": ["node"],
   "image": "render/nodejs"
 }

@@ -5,10 +5,12 @@ const gameObj = {
   playersMap: new Map(),
   itemsMap: new Map(),
   airMap: new Map(),
+  screwsMap: new Map(), // screw: スクリュー(プロペラ) ゲットすると加速するアイテム
   NPCMap: new Map(),
   addingNPCPlayerNum: 9,
   flyingMissilesMap: new Map(),
-  missileAliveFlame: 180, // ミサイルの生存時間(約6秒)
+  missileAliveFlame: 180, // ミサイルの生存時間
+  screwAliveFlame: 150,// スクリュー1回毎の生存時間
   missileSpeed: 3,
   missileWidth: 30,
   missileHeight: 30,
@@ -17,11 +19,14 @@ const gameObj = {
   fieldHeight: 1000,
   itemTotal: 15,
   airTotal: 10,
+  screwTotal: 5,
   itemRadius: 4,
   airRadius: 5,
+  screwRadius: 3,
   addAirTime: 30,// 酸素をとった際に増える、自機の残酸素数
   itemPoint: 3,
   killPoint: 500,
+  screwPoint: -100,// ポイントをマイナスする代わりに強力な効果
   submarineImageWidth: 42
 };
 
@@ -32,6 +37,9 @@ function init() {
   for (let i = 0; i < gameObj.airTotal; i++) {
     addAir();
   }
+  for (let i = 0; i < gameObj.screwTotal; i++) {
+    addScrew();
+  }
 }
 
 init();
@@ -41,7 +49,7 @@ const gameTicker = setInterval(() => {
   const playersAndNPCMap = new Map(Array.from(gameObj.playersMap).concat(Array.from(gameObj.NPCMap)));
   movePlayers(playersAndNPCMap);
   moveMissile(gameObj.flyingMissilesMap);
-  checkGetItem(playersAndNPCMap, gameObj.itemsMap, gameObj.airMap, gameObj.flyingMissilesMap);
+  checkGetItem(playersAndNPCMap, gameObj.itemsMap, gameObj.airMap, gameObj.screwsMap, gameObj.flyingMissilesMap);
   addNPC();
 }, 33);// だいたい30FPS
 
@@ -56,21 +64,30 @@ function NPCMoveDecision(NPCMap) {
         if (NPCObj.missilesMany > 0 && Math.floor(Math.random() * 90) === 0) {
           missileEmit(NPCObj.playerId, NPCObj.direction);
         }
+        if (NPCObj.screwsMany > 0 && !NPCObj.isUsingScrew && Math.floor(Math.random() * 120) === 0) {
+          updateScrewState(NPCObj.playerId);
+        }
         break;
-      case 2: // あまり方向転換をしない代わりに、ミサイルを手に入れたらすぐ放つ
+      case 2: // あまり方向転換をしない代わりに、ミサイルを手に入れたらすぐ放つ スクリューはすぐには使わない
         if (Math.floor(Math.random() * 180) === 1) {
           NPCObj.direction = gameObj.directions[Math.floor(Math.random() * gameObj.directions.length)];
         }
         if (NPCObj.missilesMany > 0 && Math.floor(Math.random() * 15) === 0) {
           missileEmit(NPCObj.playerId, NPCObj.direction);
         }
+        if (NPCObj.screwsMany > 0 && !NPCObj.isUsingScrew && Math.floor(Math.random() * 150) === 0) {
+          updateScrewState(NPCObj.playerId);
+        }
         break;
-      case 3:// 頻繁に方向転換をし、ミサイルもそこそこの頻度で放つ
+      case 3:// 頻繁に方向転換をし、ミサイルもそこそこの頻度で放つ スクリューも高頻度で使用する
         if (Math.floor(Math.random() * 5) === 1) {
           NPCObj.direction = gameObj.directions[Math.floor(Math.random() * gameObj.directions.length)];
         }
         if (NPCObj.missilesMany > 0 && Math.floor(Math.random() * 45) === 0) {
           missileEmit(NPCObj.playerId, NPCObj.direction);
+        }
+        if (NPCObj.screwsMany > 0 && !NPCObj.isUsingScrew && Math.floor(Math.random() * 50) === 0) {
+          updateScrewState(NPCObj.playerId);
         }
         break;
     }
@@ -91,6 +108,9 @@ function newConnection(socketId, displayName, thumbUrl) {
     isAlive: true,
     direction: 'right',
     missilesMany: 0,
+    screwsMany: 0,
+    isUsingScrew: false,// 加速アイテムを使っているかどうか
+    screwAliveFlame: gameObj.screwAliveFlame,
     airTime: 99,
     aliveTime: { 'clock': 0, 'seconds': 0 },
     deadCount: 0,
@@ -111,6 +131,7 @@ function getMapData() {
   const playersArray = [];
   const itemsArray = [];
   const airArray = [];
+  const screwsArray = [];
   const flyingMissilesArray = [];
   const playersAndNPCMap = new Map(Array.from(gameObj.playersMap).concat(Array.from(gameObj.NPCMap)));
 
@@ -125,6 +146,8 @@ function getMapData() {
     playerDataForSend.push(player.isAlive);
     playerDataForSend.push(player.direction);
     playerDataForSend.push(player.missilesMany);
+    playerDataForSend.push(player.screwsMany);
+    playerDataForSend.push(player.isUsingScrew);
     playerDataForSend.push(player.airTime);
     playerDataForSend.push(player.deadCount);
     playerDataForSend.push(player.thumbUrl);
@@ -150,6 +173,15 @@ function getMapData() {
     airArray.push(airDataForSend);
   }
 
+  for (let [id, screw] of gameObj.screwsMap) {
+    const screwDataForSend = [];
+
+    screwDataForSend.push(screw.x);
+    screwDataForSend.push(screw.y);
+
+    screwsArray.push(screwDataForSend);
+  }
+
   for (let [id, flyingMissile] of gameObj.flyingMissilesMap) {
     const flyingMissileDataForSend = [];
     
@@ -164,7 +196,7 @@ function getMapData() {
     flyingMissilesArray.push(flyingMissileDataForSend);
   }
 
-  return [playersArray, itemsArray, airArray, flyingMissilesArray];// 処理を軽くするため、オブジェクトをすべて配列に変換して送る
+  return [playersArray, itemsArray, airArray, screwsArray, flyingMissilesArray];// 処理を軽くするため、オブジェクトをすべて配列に変換して送る
 }
 
 function updatePlayerDirection(socketId, direction) {
@@ -172,11 +204,26 @@ function updatePlayerDirection(socketId, direction) {
   playerObj.direction = direction;
 }
 
+function updateScrewState(socketId) {
+  const playersAndNPCMap = new Map(Array.from(gameObj.playersMap).concat(Array.from(gameObj.NPCMap)));
+  if (!playersAndNPCMap.has(socketId)) return;
+
+  const playerObjUsedScrew = playersAndNPCMap.get(socketId);
+
+  if (playerObjUsedScrew.screwsMany <= 0) return;
+  if (!playerObjUsedScrew.isAlive) return;
+  if (playerObjUsedScrew.isUsingScrew) return;
+
+  playerObjUsedScrew.isUsingScrew = true;
+  playerObjUsedScrew.screwsMany -= 1;
+  playerObjUsedScrew.score += gameObj.screwPoint// 入手した時ではなく、使ったときに、スコアを足す(マイナスされる)
+}
+
 function missileEmit(socketId, direction) {
   const playersAndNPCMap = new Map(Array.from(gameObj.playersMap).concat(Array.from(gameObj.NPCMap)));
   if (!playersAndNPCMap.has(socketId)) return;
 
-  let emitPlayerObj = playersAndNPCMap.get(socketId);
+  const emitPlayerObj = playersAndNPCMap.get(socketId);
 
   if (emitPlayerObj.missilesMany <= 0) return;
   if (!emitPlayerObj.isAlive) return;
@@ -207,8 +254,8 @@ function addItem() {
   const itemY = Math.floor(Math.random() * gameObj.fieldHeight);
   const itemKey = `${itemX},${itemY}`;
 
-  if (gameObj.itemsMap.has(itemKey)) {
-    return addItem();
+  if (gameObj.itemsMap.has(itemKey)) { // アイテムの位置が被ってしまった場合は
+    return addItem(); // 別の位置に置くまで作り直し
   }
 
   const itemObj = {
@@ -223,8 +270,8 @@ function addAir() {
   const airY = Math.floor(Math.random() * gameObj.fieldHeight);
   const airKey = `${airX},${airY}`;
 
-  if (gameObj.airMap.has(airKey)) { // アイテムの位置が被ってしまった場合は
-    return addAir(); // 別の位置に置くまで作り直し
+  if (gameObj.airMap.has(airKey)) {
+    return addAir();
   }
 
   const airObj = {
@@ -234,9 +281,25 @@ function addAir() {
   gameObj.airMap.set(airKey, airObj);
 }
 
+function addScrew() {
+  const screwX = Math.floor(Math.random() * gameObj.fieldWidth);
+  const screwY = Math.floor(Math.random() * gameObj.fieldHeight);
+  const screwKey = `${screwX},${screwY}`;
+
+  if (gameObj.screwsMap.has(screwKey)) {
+    return addScrew();
+  }
+
+  const screwObj = {
+    x: screwX,
+    y: screwY
+  };
+  gameObj.screwsMap.set(screwKey, screwObj);
+}
+
 function movePlayers(playersMap) {
   for (let [playerId, player] of playersMap) {
-
+    let moveDistance = 1;
     if (!player.isAlive) {
       if (player.deadCount < 130) {
         player.deadCount += 2;
@@ -247,18 +310,28 @@ function movePlayers(playersMap) {
       continue;
     }
 
+    if (player.isUsingScrew) {
+      if (player.screwAliveFlame > 0) {
+        player.screwAliveFlame -= 1;
+        moveDistance = Math.floor(Math.random() * 4 + 2);
+      } else {
+        player.isUsingScrew = false;
+        player.screwAliveFlame = gameObj.screwAliveFlame;
+    }
+  }
+
     switch (player.direction) {
       case 'left':
-        player.x -= 1;
+        player.x -= moveDistance;
         break;
       case 'up':
-        player.y -= 1;
+        player.y -= moveDistance;
         break;
       case 'down':
-        player.y += 1;
+        player.y += moveDistance;
         break;
       case 'right':
-        player.x += 1;
+        player.x += moveDistance;
         break;
     }
     if (player.x > gameObj.fieldWidth) player.x -= gameObj.fieldWidth;// 右端より右に行ったら、左端に座標を移動する
@@ -317,13 +390,17 @@ function moveMissile(flyingMissilesMap) { // ミサイルの移動
 }
 
 function decreaseAir(playerObj) {
+  if (playerObj.isUsingScrew) {
+    playerObj.airTime -= Math.ceil(Math.floor(Math.random() * 4 + 2) * 2.5);// スクリューを使っている時は、酸素が猛スピードで減っていく
+  } else {
   playerObj.airTime -= 1;
+}
   if (playerObj.airTime === 0) {
     playerObj.isAlive = false;
   }
 }
 
-function checkGetItem(playersMap, itemsMap, airMap, flyingMissilesMap) {
+function checkGetItem(playersMap, itemsMap, airMap, screwsMap, flyingMissilesMap) {
   for (let [hashKey, playerObj] of playersMap) {
     if (!playerObj.isAlive) continue;
 
@@ -366,6 +443,24 @@ function checkGetItem(playersMap, itemsMap, airMap, flyingMissilesMap) {
         }
         playerObj.score += gameObj.itemPoint;
         addAir();
+      }
+    }
+
+    // アイテムのスクリュー（金色）
+    for (let [screwKey, screwObj] of screwsMap) {
+
+      const distanceObj = calculationBetweenTwoPoints(
+        playerObj.x, playerObj.y, screwObj.x, screwObj.y, gameObj.fieldWidth, gameObj.fieldHeight
+      );
+
+      if (
+        distanceObj.distanceX <= (gameObj.submarineImageWidth / 2 + gameObj.screwRadius) &&
+        distanceObj.distanceY <= (gameObj.submarineImageWidth / 2 + gameObj.screwRadius)
+      ) {
+
+        gameObj.screwsMap.delete(screwKey);
+        playerObj.screwsMany = playerObj.screwsMany > 0 ? 1 : playerObj.screwsMany + 1;// 1個までしか持てない
+        addScrew();
       }
     }
 
@@ -434,6 +529,9 @@ function addNPC() {
         deadCount: 0,
         direction: 'right',
         missilesMany: 0,
+        screwsMany: 0,
+        isUsingScrew: false,
+        screwAliveFlame: gameObj.screwAliveFlame,
         airTime: 99,
         aliveTime: { 'clock': 0, 'seconds': 0 },
         score: 0,
@@ -499,5 +597,6 @@ module.exports = {
   getMapData,
   updatePlayerDirection,
   missileEmit,
+  updateScrewState,
   disconnect
 };

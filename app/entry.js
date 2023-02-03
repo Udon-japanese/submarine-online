@@ -10,6 +10,7 @@ const gameObj = {
   scoreCanvasHeight: 500,
   itemRadius: 4,
   airRadius: 5,
+  screwRadius: 3,
   bomCellPx: 32,
   deg: 0,
   counter: 0,
@@ -31,6 +32,7 @@ const gameObj = {
   fieldHeight: null,
   itemsMap: new Map(),
   airMap: new Map(),
+  screwsMap: new Map(),
   flyingMissilesMap: new Map()
 };
 
@@ -52,9 +54,8 @@ function init() {
   gameObj.ctxScore = scoreCanvas.getContext('2d');
 
   // 潜水艦の画像
-  const submarineImage = new Image();
-  submarineImage.src = '/images/submarine.png';
-  gameObj.submarineImage = submarineImage;
+  gameObj.submarineImage = new Image();
+  gameObj.submarineImage.src = '/images/submarine.png';
 
   // ミサイルの画像
   gameObj.missileImage = new Image();
@@ -63,6 +64,10 @@ function init() {
   // 爆発の画像集
   gameObj.bomListImage = new Image();
   gameObj.bomListImage.src = '/images/bomlist.png';
+
+  // スクリューの画像
+  gameObj.screwImage = new Image();
+  gameObj.screwImage.src = '/images/screw.png';
 }
 
 init();
@@ -81,6 +86,7 @@ function ticker() {
   gameObj.ctxScore.clearRect(0, 0, gameObj.scoreCanvasWidth, gameObj.scoreCanvasHeight);
   drawAirTimer(gameObj.ctxScore, gameObj.myPlayerObj.airTime);
   drawMissiles(gameObj.ctxScore, gameObj.myPlayerObj.missilesMany);
+  drawScrews(gameObj.ctxScore, gameObj.myPlayerObj.screwsMany);
   drawScore(gameObj.ctxScore, gameObj.myPlayerObj.score);
   drawRanking(gameObj.ctxScore, gameObj.playersMap);
 
@@ -165,6 +171,12 @@ function drawMissiles(ctxScore, missilesMany) {
   }
 }
 
+function drawScrews(ctxScore, screwsMany) {
+  for (let i = 0; i < screwsMany; i++) {
+    ctxScore.drawImage(gameObj.screwImage, 50 * i + 220, 20);// 1個しか描画できないが、拡張性を持たせるためにあえてループ文の中に入れた
+  }
+}
+
 function drawAirTimer(ctxScore, airTime) {
   ctxScore.fillStyle = 'rgb(0, 220, 250)';
   ctxScore.font = 'bold 40px Arial';
@@ -213,7 +225,7 @@ function drawRanking(ctxScore, playersMap) {
 
     const { playerId, thumbUrl, displayName, score } = playersArray[i][1];
 
-    if (/twimg\.com/.test(thumbUrl) || /^images\/user-icons\//.test(thumbUrl)) {// Twitter の 画像URL と images/user-icons 直下のパスにマッチしないものは除外
+    if (/twimg\.com/.test(thumbUrl) || /^images\/user-icons\//.test(thumbUrl)) {// Twitter の 画像URL と images/user-icons から始まるパスにマッチしないものは除外
       const thumbWidth = 23, thumbHeight = 23;
       const rankWidth = ctxScore.measureText(rankString).width;
 
@@ -253,7 +265,8 @@ socket.on('map data', (compressed) => {
   const playersArray = compressed[0];
   const itemsArray = compressed[1];
   const airArray = compressed[2];
-  const flyingMissilesArray = compressed[3];
+  const screwsArray = compressed[3];
+  const flyingMissilesArray = compressed[4];
 
   gameObj.playersMap = new Map();
   for (let compressedPlayerData of playersArray) {
@@ -267,9 +280,11 @@ socket.on('map data', (compressed) => {
     player.isAlive = compressedPlayerData[5];
     player.direction = compressedPlayerData[6];
     player.missilesMany = compressedPlayerData[7];
-    player.airTime = compressedPlayerData[8];
-    player.deadCount = compressedPlayerData[9];
-    player.thumbUrl = compressedPlayerData[10];
+    player.screwsMany = compressedPlayerData[8];
+    player.isUsingScrew = compressedPlayerData[9];
+    player.airTime = compressedPlayerData[10];
+    player.deadCount = compressedPlayerData[11];
+    player.thumbUrl = compressedPlayerData[12];
 
     gameObj.playersMap.set(player.playerId, player);
 
@@ -281,9 +296,11 @@ socket.on('map data', (compressed) => {
       gameObj.myPlayerObj.score = compressedPlayerData[4];
       gameObj.myPlayerObj.isAlive = compressedPlayerData[5];
       gameObj.myPlayerObj.missilesMany = compressedPlayerData[7];
-      gameObj.myPlayerObj.airTime = compressedPlayerData[8];
-      gameObj.myPlayerObj.deadCount = compressedPlayerData[9];
-      player.thumbUrl = compressedPlayerData[10];
+      gameObj.myPlayerObj.screwsMany = compressedPlayerData[8];
+      gameObj.myPlayerObj.isUsingScrew = compressedPlayerData[9];
+      gameObj.myPlayerObj.airTime = compressedPlayerData[10];
+      gameObj.myPlayerObj.deadCount = compressedPlayerData[11];
+      gameObj.myPlayerObj.thumbUrl = compressedPlayerData[12];
     }
   }
 
@@ -295,6 +312,11 @@ socket.on('map data', (compressed) => {
   gameObj.airMap = new Map();
   airArray.forEach((compressedAirData, index) => {
     gameObj.airMap.set(index, { x: compressedAirData[0], y: compressedAirData[1] });
+  });
+
+  gameObj.screwsMap = new Map();
+  screwsArray.forEach((compressedScrewData, index) => {
+    gameObj.screwsMap.set(index, { x: compressedScrewData[0], y: compressedScrewData[1] });
   });
 
   gameObj.flyingMissilesMap = new Map();
@@ -383,6 +405,7 @@ function drawMap(gameObj) {
 
   drawObj(gameObj.itemsMap, 255, 0, 0);
   drawObj(gameObj.airMap, 0, 220, 255);
+  drawObj(gameObj.screwsMap, 230, 180, 34);
 
   // 飛んでいるミサイルの描画
   for (let [missileId, flyingMissile] of gameObj.flyingMissilesMap) {
@@ -636,6 +659,12 @@ $(window).on("keydown", (event) => {
       gameObj.flyingMissilesMap.set(missileId, missileObj);
       sendMissileEmit(socket, gameObj.myPlayerObj.direction);
       break;
+    case 's':
+    case 'S':
+      if (gameObj.myPlayerObj.screwsMany <= 0 || gameObj.myPlayerObj.isUsingScrew) break;// スクリューを一つも持っていないか、スクリュー使用済みの場合か、その両方
+      gameObj.myPlayerObj.screwsMany -= 1;
+      sendScrewState(socket);
+      break;
   }
 });
 
@@ -647,7 +676,12 @@ function sendMissileEmit(socket, direction) {
   socket.emit('missile emit', direction);
 }
 
+function sendScrewState(socket, screwState) {
+  socket.emit('change screw state', screwState);
+}
+
 function moveInClient(myPlayerObj, flyingMissilesMap) {// サーバからflyingMissilesMap を受け取るまでの、プレイヤーとミサイルの移動
+  let moveDistance = 1;
 
   if (!myPlayerObj.isAlive) {
     if (myPlayerObj.deadCount < 60) {
@@ -656,19 +690,23 @@ function moveInClient(myPlayerObj, flyingMissilesMap) {// サーバからflyingM
     return;
   }
 
+  if (myPlayerObj.isUsingScrew) {
+    moveDistance = Math.floor(Math.random() * 4 + 2);
+  }
+
   // 移動
   switch (myPlayerObj.direction) {
     case 'left':
-      myPlayerObj.x -= 1;
+      myPlayerObj.x -= moveDistance;
       break;
     case 'up':
-      myPlayerObj.y -= 1;
+      myPlayerObj.y -= moveDistance;
       break;
     case 'down':
-      myPlayerObj.y += 1;
+      myPlayerObj.y += moveDistance;
       break;
     case 'right':
-      myPlayerObj.x += 1;
+      myPlayerObj.x += moveDistance;
       break;
   }
   if (myPlayerObj.x > gameObj.fieldWidth) myPlayerObj.x -= gameObj.fieldWidth;

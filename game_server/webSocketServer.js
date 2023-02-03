@@ -16,6 +16,10 @@ function createWebSocketServer(io, game) {
     socket.on('missile emit', (direction) => {
       game.missileEmit(socket.id, direction);
     });
+
+    socket.on('change screw state', () => {
+      game.updateScrewState(socket.id);
+    })
   
     socket.on('disconnect', () => {
       game.disconnect(socket.id);
