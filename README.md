@@ -15,7 +15,7 @@
 
 - [Twitter](https://about.twitter.com/ja/who-we-are/brand-toolkit)と
 [GitHub](https://github.com/logos)
-のロゴは、公式サイトが配布している物を使わせていただいております。
+のロゴは、公式サイトが配布している物を、ルールに則って使わせていただいております。
 
 - その他の画像は、私が描いた・制作したものを使用しております。
 
