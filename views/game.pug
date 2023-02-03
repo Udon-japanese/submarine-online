@@ -7,6 +7,10 @@ block content
       canvas#radar
       h3.ms-5.text-nowrap #{displayName}
         img(src=`${thumbUrl}` alt=`${displayName} のアイコン` width="40" height="40")
+      - const encodedDisplayName = encodeURIComponent(displayName);
+      - const encodedThumbUrl = encodeURIComponent(thumbUrl);
+      .d-grid.gap-2.d-md-block.text-center.my-4.my-md-0
+        a.d-none.btn.btn-outline-primary#backToTitle(href=`/?name=${encodedDisplayName}&icon=${encodedThumbUrl}` role="button") タイトルに戻る(もう一度遊ぶ)
     canvas#score
   script#main(src="/javascripts/index/bundle.js" data-displayName=`${displayName}`
   data-thumbUrl=`${thumbUrl}` data-ipAddress=`${ipAddress}`)

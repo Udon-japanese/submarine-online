@@ -184,7 +184,7 @@ function getMapData() {
 
   for (let [id, flyingMissile] of gameObj.flyingMissilesMap) {
     const flyingMissileDataForSend = [];
-    
+
     flyingMissileDataForSend.push(id);
     flyingMissileDataForSend.push(flyingMissile.x);
     flyingMissileDataForSend.push(flyingMissile.y);
@@ -317,8 +317,8 @@ function movePlayers(playersMap) {
       } else {
         player.isUsingScrew = false;
         player.screwAliveFlame = gameObj.screwAliveFlame;
+      }
     }
-  }
 
     switch (player.direction) {
       case 'left':
@@ -391,10 +391,13 @@ function moveMissile(flyingMissilesMap) { // ミサイルの移動
 
 function decreaseAir(playerObj) {
   if (playerObj.isUsingScrew) {
-    playerObj.airTime -= Math.ceil(Math.floor(Math.random() * 4 + 2) * 2.5);// スクリューを使っている時は、酸素が猛スピードで減っていく
+    playerObj.airTime -= Math.ceil(Math.floor(Math.random() * 4 + 2) * 2.8);// スクリューを使っている時は、酸素が猛スピードで減っていく
   } else {
-  playerObj.airTime -= 1;
-}
+    playerObj.airTime -= 1;
+  }
+
+  if (playerObj.airTime < 0) playerObj.airTime = 0;// クライアント側で、残酸素数がマイナスになるのを防ぐため
+
   if (playerObj.airTime === 0) {
     playerObj.isAlive = false;
   }

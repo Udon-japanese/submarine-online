@@ -19,16 +19,16 @@ function createWebSocketServer(io, game) {
 
     socket.on('change screw state', () => {
       game.updateScrewState(socket.id);
-    })
-  
+    });
+
     socket.on('disconnect', () => {
       game.disconnect(socket.id);
     });
   });
 
   const socketTicker = setInterval(() => {
-      rootIo.volatile.emit('map data', game.getMapData()); // 全員に送信
-    },
+    rootIo.volatile.emit('map data', game.getMapData()); // 全員に送信
+  },
     66);// clearIntervalを使えるように(現時点では使用しないが、今後のため)
 }
 

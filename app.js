@@ -18,7 +18,7 @@ passport.use(new Strategy({
   consumerKey: process.env.TWITTER_CONSUMER_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
   callbackURL: process.env.OAUTH_CALLBACK_URL
-  },
+},
   (token, tokenSecret, profile, cb) => {
     process.nextTick(() => cb(null, profile));
   }
@@ -60,7 +60,7 @@ app.use('/', indexRouter);
 app.use('/game', gameRouter);
 app.use('/name/config', nameRouter);
 
-app.get('/login/twitter', 
+app.get('/login/twitter',
   passport.authenticate('twitter')
 );
 
@@ -77,12 +77,12 @@ app.get('/logout', (req, res, next) => {
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

@@ -23,7 +23,7 @@ router.get('/', (req, res, next) => {
   } else if (req.query.name && !req.user) {// 初回の名前入力時
     const displayName = decodeURIComponent(req.query.name);
     const thumbUrl = iconsPath + playerIcons[Math.floor(Math.random() * 20)];
-    
+
     res.render('index', { displayName, thumbUrl });
 
   } else {// Twitter 認証をしている場合と、Twitter 認証をしておらず、プレイヤーネームも設定していない場合

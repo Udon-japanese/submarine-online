@@ -81,6 +81,7 @@ function ticker() {
   drawSubmarine(gameObj.ctxRadar, gameObj.myPlayerObj);
   if (!gameObj.myPlayerObj.isAlive && gameObj.myPlayerObj.deadCount > 120) {
     drawGameOver(gameObj.ctxRadar);
+    $('#backToTitle').removeClass('d-none');// タイトルに戻るボタン表示
   }
 
   gameObj.ctxScore.clearRect(0, 0, gameObj.scoreCanvasWidth, gameObj.scoreCanvasHeight);
@@ -90,7 +91,7 @@ function ticker() {
   drawScore(gameObj.ctxScore, gameObj.myPlayerObj.score);
   drawRanking(gameObj.ctxScore, gameObj.playersMap);
 
-  moveInClient(gameObj.myPlayerObj, gameObj.flyingMissilesMap); // 遅延を感じさせないためにクライアント側でも動かす
+  moveInClient(gameObj.myPlayerObj, gameObj.flyingMissilesMap); // なるべく遅延を感じさせないためにクライアント側でも動かす
 
   gameObj.counter = (gameObj.counter + 1) % 10000;
 }
@@ -321,18 +322,18 @@ socket.on('map data', (compressed) => {
 
   gameObj.flyingMissilesMap = new Map();
   for (let compressedFlyingMissileData of flyingMissilesArray) {
-    
-      const flyingMissile = {};
-      flyingMissile.missileId = compressedFlyingMissileData[0];// 一応クライアント側でも、迎撃されたミサイルidと同じかどうか確認したいため、 id も受け取る
-      flyingMissile.x = compressedFlyingMissileData[1];
-      flyingMissile.y = compressedFlyingMissileData[2];
-      flyingMissile.direction = compressedFlyingMissileData[3];
-      flyingMissile.emitPlayerId = compressedFlyingMissileData[4];
-      flyingMissile.interceptedMissileId = compressedFlyingMissileData[5];// 迎撃されたミサイルのid（中身は flyingMissile.missileId と同じ）
-      flyingMissile.deadCount = compressedFlyingMissileData[6];// ミサイルの爆発を描画するのに必要なカウンター
 
-      gameObj.flyingMissilesMap.set(flyingMissile.missileId, flyingMissile);
-    }
+    const flyingMissile = {};
+    flyingMissile.missileId = compressedFlyingMissileData[0];// 一応クライアント側でも、迎撃されたミサイルidと同じかどうか確認したいため、 id も受け取る
+    flyingMissile.x = compressedFlyingMissileData[1];
+    flyingMissile.y = compressedFlyingMissileData[2];
+    flyingMissile.direction = compressedFlyingMissileData[3];
+    flyingMissile.emitPlayerId = compressedFlyingMissileData[4];
+    flyingMissile.interceptedMissileId = compressedFlyingMissileData[5];// 迎撃されたミサイルのid（中身は flyingMissile.missileId と同じ）
+    flyingMissile.deadCount = compressedFlyingMissileData[6];// ミサイルの爆発を描画するのに必要なカウンター
+
+    gameObj.flyingMissilesMap.set(flyingMissile.missileId, flyingMissile);
+  }
 });
 
 function getRadian(deg) {
