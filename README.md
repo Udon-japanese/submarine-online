@@ -1,5 +1,5 @@
 # 潜水艦ゲーム・改
-(現在製作途中です。もうしばらくお待ちください。)
+大変お待たせしました。完成いたしました。
 
 [![Module install and build with webpack](https://github.com/Udon-japanese/submarine-online/actions/workflows/main.yml/badge.svg)](https://github.com/Udon-japanese/submarine-online/actions/workflows/main.yml)
 ## 遊び方
