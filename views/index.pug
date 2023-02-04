@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1.text-center 潜水艦ゲーム・改
+  h1.text-center 潜水艦ゲーム・改（Ver. 1.1.2）
     //- 全体的にレスポンシブなデザインに
   #captionCarousel.carousel.slide.carousel-fade(data-bs-ride="carousel")
     .carousel-indicators
@@ -53,7 +53,9 @@ block content
   else
     h4.text-center.my-3 Twitter でログインすると
       br
-      | プレイ中のランキングに名前とアイコンが表示されます
+      | プレイ中のランキングに
+      br.d-sm-none
+      | 名前とアイコンが表示されます
     .d-grid.gap-2.d-md-flex.justify-content-md-center
       a.text-nowrap.text-light.btn.btn-info.py-2(href='login/twitter' role="button") Twitter でログイン
         img.float-start.me-2(href="login/twitter" src="/images/twitter.png" alt="Twitterロゴ" width="25" height="20.575")
